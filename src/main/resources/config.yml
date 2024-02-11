@@ -1,0 +1,7 @@
+entity-name-format: "§5%s §b(%s)" # Zombie (4x)
+spawner-name-format: "%s (%sX) Spawner" # Zombie (4x) Spawner
+level-up-particle:
+  enable: true
+  particle: "VILLAGER_HAPPY"
+max-entity-stack: 100
+max-spawner-stack: 100

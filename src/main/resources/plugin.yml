@@ -1,0 +1,13 @@
+name: AdvancedSpawners
+version: '${project.version}'
+main: org.info_0.advancedspawners.AdvancedSpawners
+api-version: '1.19'
+folia-supported: true
+depend:
+  - Towny
+commands:
+  givespawner:
+    permission: "advancedspawners.commands.give"
+permissions:
+  advancedspawners.commands:
+    default: op

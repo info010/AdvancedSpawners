@@ -23,6 +23,7 @@ public class SetLevel implements Listener {
     @EventHandler
     public void setSpawnerLevel(PlayerInteractEvent event){
         if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+
         if(!event.getClickedBlock().getType().equals(Material.SPAWNER)) return;
         if(!event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.SPAWNER)) return;
         if(AdvancedSpawners.townyApi()){

@@ -32,6 +32,10 @@ public class PlaceSpawner implements Listener {
                 return;
             }
         }
+        if(event.isCancelled()) {
+            event.getPlayer().sendMessage("Bu arazide bu işlemi yapamazsınız.");
+            return;
+        }
         spawner.setMetadata("PLACED",new FixedMetadataValue(AdvancedSpawners.getInstance(),1));
         ItemStack spawnerItem = event.getItemInHand();
         Integer spawnerLevel = spawnerItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(AdvancedSpawners.getInstance(),"LEVEL"),PersistentDataType.INTEGER);

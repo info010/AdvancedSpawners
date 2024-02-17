@@ -19,9 +19,8 @@ public class GiveSpawner implements CommandExecutor {
             commandSender.sendMessage(ChatColor.YELLOW+"Kullanımı /givespawner <oyuncu> <spawner-tipi>");
             return false;
         }
-        Player player = (Player) commandSender;
         if(Bukkit.getPlayer(strings[0]) == null){
-            player.sendMessage("Oyuncu bulunamadı.");
+            commandSender.sendMessage("Oyuncu bulunamadı.");
             return false;
         }
         try {
@@ -29,7 +28,7 @@ public class GiveSpawner implements CommandExecutor {
             getServer().getLogger().severe(String.format("%s ,bir %s spawner aldı.",strings[0],strings[1]));
             return true;
         }catch (RuntimeException e){
-            player.sendMessage("Yaratık tipi geçerli değil. https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html");
+            commandSender.sendMessage("Yaratık tipi geçerli değil. https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html");
             throw new RuntimeException();
         }
     }

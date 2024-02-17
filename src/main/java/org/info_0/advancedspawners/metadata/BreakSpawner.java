@@ -29,7 +29,6 @@ public class BreakSpawner implements Listener {
 
     @EventHandler
     public void breakSpawner(BlockBreakEvent event){
-
         if(event.getBlock().getMetadata("PLACED").isEmpty() || !event.getBlock().getType().equals(Material.SPAWNER)) return;
         Block spawner = event.getBlock();
         int level = spawner.getMetadata("LEVEL").get(0).asInt();
@@ -40,6 +39,10 @@ public class BreakSpawner implements Listener {
                 event.setCancelled(true);
                 return;
             }
+        }
+        if(event.isCancelled()) {
+            event.getPlayer().sendMessage("Bu arazide bu işlemi yapamazsınız.");
+            return;
         }
         CreatureSpawner creatureSpawner = (CreatureSpawner) spawner.getState();
         if((event.getPlayer().getInventory().getItemInMainHand().getType().isAir()

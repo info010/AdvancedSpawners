@@ -1,5 +1,6 @@
-entity-name-format: "§5%s §b(%s)" # Zombie (4x)
-spawner-name-format: "%s (%sX) Spawner" # Zombie (4x) Spawner
+entity-name-format: "&5%s &b(%sX)" # Zombie (4X)
+spawner-name-format: "%s (%sX) Spawner" # Zombie (4X) Spawner
+inventory-name-format: "%s Spawner (%sX)" # Zombie Spawner (4X)
 level-up-particle:
   enable: true
   particle: "VILLAGER_HAPPY"

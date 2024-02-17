@@ -11,11 +11,13 @@ import org.info_0.advancedspawners.AdvancedSpawners;
 
 public class PoenaSagaSpawner {
 
+    private static String name = AdvancedSpawners.getInstance().getConfig().getString("inventory-name-format").replace("&","§");
+
     public static ItemStack peonasagaSpawner(EntityType type, int level){
         ItemStack spawnerItem = new ItemStack(Material.SPAWNER,1);
         ItemMeta spawnerMeta = spawnerItem.getItemMeta();
         assert spawnerMeta != null;
-        spawnerMeta.setDisplayName(ChatColor.GREEN + String.format("%s LV %s Spawner",level,type.name()));
+        spawnerMeta.setDisplayName(ChatColor.GREEN + String.format(name,type.name(),level));
         spawnerMeta.getPersistentDataContainer().set(new NamespacedKey(AdvancedSpawners.getInstance(), "LEVEL"), PersistentDataType.INTEGER, level);
         spawnerMeta.getPersistentDataContainer().set(new NamespacedKey(AdvancedSpawners.getInstance(), "SPAWNER_ENTITY_TYPE"), PersistentDataType.STRING, type.name());
         spawnerItem.setItemMeta(spawnerMeta);

@@ -22,7 +22,7 @@ import static org.bukkit.Bukkit.getServer;
 public class StackEntities implements Listener{
 
     private final int maxStack = AdvancedSpawners.getInstance().getConfig().getInt("max-entity-stack");
-    private final String entityName = AdvancedSpawners.getInstance().getConfig().getString("entity-name-format");
+    private final String entityName = AdvancedSpawners.getInstance().getConfig().getString("entity-name-format").replace("&","§");
 
     @EventHandler
     public void spawnSpawnerEntity(SpawnerSpawnEvent event){
@@ -61,13 +61,18 @@ public class StackEntities implements Listener{
         String name = String.format(entityName,entity.getType().name(),stack);
         livingEntity.setCustomName(ChatColor.GREEN + name);
         livingEntity.setMetadata("SPAWNER-ENTITY",new FixedMetadataValue(AdvancedSpawners.getInstance(),true));
-        livingEntity.setMetadata("ENTITY-STACK",new FixedMetadataValue(AdvancedSpawners.getInstance(),stack));
+        if(stack > maxStack)
+            livingEntity.setMetadata("ENTITY-STACK",new FixedMetadataValue(AdvancedSpawners.getInstance(),maxStack));
+        else
+            livingEntity.setMetadata("ENTITY-STACK",new FixedMetadataValue(AdvancedSpawners.getInstance(),stack));
     }
 
     private void updateSpawnerEntity(Entity entity,int stack){
-        if(stack > maxStack) return;
         String name = String.format(entityName,stack,entity.getType().name());
         entity.setCustomName(ChatColor.GREEN + name);
-        entity.setMetadata("ENTITY-STACK",new FixedMetadataValue(AdvancedSpawners.getInstance(),stack));
+        if(stack > maxStack)
+            entity.setMetadata("ENTITY-STACK",new FixedMetadataValue(AdvancedSpawners.getInstance(),maxStack));
+        else
+            entity.setMetadata("ENTITY-STACK",new FixedMetadataValue(AdvancedSpawners.getInstance(),stack));
     }
 }

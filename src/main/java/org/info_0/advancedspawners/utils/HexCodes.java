@@ -5,7 +5,6 @@ import net.md_5.bungee.api.ChatColor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
 public class HexCodes {
 

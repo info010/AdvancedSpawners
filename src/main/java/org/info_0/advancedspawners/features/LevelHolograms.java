@@ -15,7 +15,7 @@ import java.util.List;
 
 public class LevelHolograms {
 
-    private static final String spawnerName = AdvancedSpawners.getInstance().getConfig().getString("spawner-name-format");
+    private static final String spawnerName = AdvancedSpawners.getInstance().getConfig().getString("spawner-name-format").replace("&","§");
 
     private static ChatColor spawnerColor(int level){
         if(level >= 0 && level < 10) return ChatColor.YELLOW;

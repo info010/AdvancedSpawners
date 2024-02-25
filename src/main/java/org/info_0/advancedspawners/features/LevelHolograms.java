@@ -9,9 +9,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.info_0.advancedspawners.AdvancedSpawners;
+import org.info_0.advancedspawners.utils.DataUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class LevelHolograms {
 
@@ -33,7 +35,7 @@ public class LevelHolograms {
 
     public static void createSpawnerName(Block block, int level){
         ArmorStand spawnerNameHologram = (ArmorStand) block.getWorld().spawnEntity(block.getLocation().add(0.5,0,0.5), EntityType.ARMOR_STAND);
-        spawnerNameHologram.setMetadata("SPAWNER-ID",new FixedMetadataValue(AdvancedSpawners.getInstance(),block.getLocation().toString()));
+        DataUtil.setHologramID(spawnerNameHologram, DataUtil.getSpawnerUUID(block));
         CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
         spawnerNameHologram.setCollidable(false);
         spawnerNameHologram.setVisible(false);
@@ -46,12 +48,12 @@ public class LevelHolograms {
 
     public static void delSpawnerName(Block block){
         ArrayList<Entity> entities = (ArrayList<Entity>) block.getWorld().getNearbyEntities(block.getLocation(),1,1,1);
-        String spawnerID = block.getLocation().toString();
+        UUID spawnerID = DataUtil.getSpawnerUUID(block);
         for(Entity entity: entities){
             if(!(entity instanceof ArmorStand)) continue;
             ArmorStand stand = (ArmorStand) entity;
-            List<MetadataValue> metadata = stand.getMetadata("SPAWNER-ID");
-            if (metadata.isEmpty() || !metadata.get(0).asString().equals(spawnerID)) continue;
+            UUID id = DataUtil.getHologramID(stand);
+            if (id == null || !id.equals(spawnerID)) continue;
             stand.remove();
             break;
         }

@@ -1,4 +1,4 @@
-package org.info_0.advancedspawners.metadata;
+package org.info_0.advancedspawners.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -14,10 +14,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.info_0.advancedspawners.AdvancedSpawners;
 import org.info_0.advancedspawners.api.Towny;
 import org.info_0.advancedspawners.features.LevelHolograms;
+import org.info_0.advancedspawners.utils.DataUtil;
 
 public class PlaceSpawner implements Listener {
-
-    private Towny towny = new Towny();
 
     @EventHandler
     public void placeSpawner(BlockPlaceEvent event){
@@ -26,7 +25,7 @@ public class PlaceSpawner implements Listener {
         if(!event.getBlockPlaced().getType().equals(Material.SPAWNER)) return;
         Block spawner = event.getBlockPlaced();
         if(AdvancedSpawners.townyApi()){
-            if(!towny.hasBuildPermission(spawner,event.getPlayer())){
+            if(!Towny.hasBuildPermission(spawner,event.getPlayer())){
                 event.getPlayer().sendMessage("Bu arazide bu işlemi yapamazsınız.");
                 event.setCancelled(true);
                 return;
@@ -36,13 +35,12 @@ public class PlaceSpawner implements Listener {
             event.getPlayer().sendMessage("Bu arazide bu işlemi yapamazsınız.");
             return;
         }
-        spawner.setMetadata("PLACED",new FixedMetadataValue(AdvancedSpawners.getInstance(),1));
         ItemStack spawnerItem = event.getItemInHand();
-        Integer spawnerLevel = spawnerItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(AdvancedSpawners.getInstance(),"LEVEL"),PersistentDataType.INTEGER);
-        spawner.setMetadata("LEVEL",new FixedMetadataValue(AdvancedSpawners.getInstance(),spawnerLevel));
+        int spawnerLevel = spawnerItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(AdvancedSpawners.getInstance(),"LEVEL"),PersistentDataType.INTEGER);
         CreatureSpawner creatureSpawner = (CreatureSpawner) spawner.getState();
         EntityType entityType = EntityType.valueOf(spawnerItem.getItemMeta().getPersistentDataContainer()
                 .get(new NamespacedKey(AdvancedSpawners.getInstance(),"SPAWNER_ENTITY_TYPE"),PersistentDataType.STRING));
+        DataUtil.createSpawnerData(spawner, entityType, spawnerLevel);
         creatureSpawner.setSpawnedType(entityType);
         creatureSpawner.update();
         LevelHolograms.createSpawnerName(spawner,spawnerLevel);

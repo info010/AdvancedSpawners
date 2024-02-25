@@ -1,13 +1,11 @@
 package org.info_0.advancedspawners;
 
-import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.info_0.advancedspawners.Entities.StackEntities;
+import org.info_0.advancedspawners.api.NaturalSpawnerRemover;
 import org.info_0.advancedspawners.commands.GiveSpawner;
-import org.info_0.advancedspawners.commands.MainPluginCommand;
-import org.info_0.advancedspawners.metadata.BreakSpawner;
-import org.info_0.advancedspawners.metadata.PlaceSpawner;
+import org.info_0.advancedspawners.listeners.BreakSpawner;
+import org.info_0.advancedspawners.listeners.PlaceSpawner;
 import org.info_0.advancedspawners.features.SetLevel;
 
 public final class AdvancedSpawners extends JavaPlugin {
@@ -35,6 +33,7 @@ public final class AdvancedSpawners extends JavaPlugin {
         instance.getServer().getPluginManager().registerEvents(new BreakSpawner(),instance);
         instance.getServer().getPluginManager().registerEvents(new SetLevel(),instance);
         instance.getServer().getPluginManager().registerEvents(new PlaceSpawner(),instance);
+        instance.getServer().getPluginManager().registerEvents(new NaturalSpawnerRemover(),instance);
         instance.getServer().getPluginManager().registerEvents(new StackEntities(),instance);
     }
 

@@ -15,6 +15,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataType;
 import org.info_0.advancedspawners.AdvancedSpawners;
 import org.info_0.advancedspawners.api.Towny;
+import org.info_0.advancedspawners.utils.DataType;
+import org.info_0.advancedspawners.utils.DataUtil;
 
 public class SetLevel implements Listener {
 
@@ -35,7 +37,7 @@ public class SetLevel implements Listener {
         }
         ItemStack spawnerItem = event.getPlayer().getInventory().getItemInMainHand();
         Block spawner = event.getClickedBlock();
-        if(spawner.getMetadata("PLACED").isEmpty() && !spawnerItem.getItemMeta().getPersistentDataContainer()
+        if(!DataUtil.hasSpawnerData(spawner) || !spawnerItem.getItemMeta().getPersistentDataContainer()
                 .has(new NamespacedKey(AdvancedSpawners.getInstance(),"LEVEL"), PersistentDataType.INTEGER)){
             event.getPlayer().sendMessage("Bu işlem yalnızca siteden satın alınan Spawnerlar için geçerlidir.");
             return;
@@ -47,13 +49,13 @@ public class SetLevel implements Listener {
             return;
         }
         int spawnerItemLevel = spawnerItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(AdvancedSpawners.getInstance(), "LEVEL"), PersistentDataType.INTEGER);
-        int newSpawnerLevel = spawner.getMetadata("LEVEL").get(0).asInt()+spawnerItemLevel;
+        int newSpawnerLevel =  DataUtil.getSpawnerLevel(spawner)+spawnerItemLevel;
         if (newSpawnerLevel > 100){
-            event.getPlayer().sendMessage("Bu spawner ulaşabileceği en yüksek seviyeye ulaşmış.");
+            event.getPlayer().sendMessage("Birleştirmek istediğiniz spawnerlar seviye sınırını aşıyor.");
             event.setCancelled(true);
             return;
         }
-        spawner.setMetadata("LEVEL",new FixedMetadataValue(AdvancedSpawners.getInstance(),newSpawnerLevel));
+        DataUtil.setSpawnerLevel(spawner, newSpawnerLevel);
         LevelHolograms.updateLevelName(spawner,newSpawnerLevel);
         creatureSpawner.update();
         if(config.getBoolean("level-up-particle.enable")) spawner.getWorld().spawnParticle(Particle.valueOf(config.getString("level-up-particle.particle")),spawner.getLocation(),25,0.5,0,0.5);

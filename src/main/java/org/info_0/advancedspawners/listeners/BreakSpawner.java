@@ -1,4 +1,4 @@
-package org.info_0.advancedspawners.metadata;
+package org.info_0.advancedspawners.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,6 +13,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.info_0.advancedspawners.AdvancedSpawners;
 import org.info_0.advancedspawners.api.Towny;
 import org.info_0.advancedspawners.features.LevelHolograms;
+import org.info_0.advancedspawners.utils.DataType;
+import org.info_0.advancedspawners.utils.DataUtil;
 
 import static org.info_0.advancedspawners.items.PoenaSagaSpawner.peonasagaSpawner;
 
@@ -29,9 +31,9 @@ public class BreakSpawner implements Listener {
 
     @EventHandler
     public void breakSpawner(BlockBreakEvent event){
-        if(event.getBlock().getMetadata("PLACED").isEmpty() || !event.getBlock().getType().equals(Material.SPAWNER)) return;
+        if(!DataUtil.hasSpawnerData(event.getBlock()) || !event.getBlock().getType().equals(Material.SPAWNER)) return;
         Block spawner = event.getBlock();
-        int level = spawner.getMetadata("LEVEL").get(0).asInt();
+        int level = DataUtil.getSpawnerLevel(spawner);
         Player player = event.getPlayer();
         if(AdvancedSpawners.townyApi()){
             if(!Towny.hasDestroyPermission(spawner,event.getPlayer())){
@@ -54,8 +56,8 @@ public class BreakSpawner implements Listener {
                 || !event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.WOODEN_PICKAXE))
                 && !event.getPlayer().getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.SILK_TOUCH))
         {
-            spawner.setMetadata("LEVEL",new FixedMetadataValue(AdvancedSpawners.getInstance(),level-1));
-            LevelHolograms.updateLevelName(spawner,spawner.getMetadata("LEVEL").get(0).asInt());
+            DataUtil.setSpawnerLevel(spawner, level-1);
+            LevelHolograms.updateLevelName(spawner, DataUtil.getSpawnerLevel(spawner));
             creatureSpawner.update();
             if(level-1 >= 1){
                 event.setCancelled(true);
@@ -72,8 +74,8 @@ public class BreakSpawner implements Listener {
             }
             else {
                 player.getInventory().addItem(peonasagaSpawner(creatureSpawner.getSpawnedType(),1));
-                spawner.setMetadata("LEVEL",new FixedMetadataValue(AdvancedSpawners.getInstance(),level-1));
-                LevelHolograms.updateLevelName(spawner,spawner.getMetadata("LEVEL").get(0).asInt());
+                DataUtil.setSpawnerLevel(spawner, level-1);
+                LevelHolograms.updateLevelName(spawner, DataUtil.getSpawnerLevel(spawner));
                 creatureSpawner.update();
                 if(level-1 >= 1){
                     event.setCancelled(true);

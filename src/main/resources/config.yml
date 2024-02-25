@@ -6,3 +6,7 @@ level-up-particle:
   particle: "VILLAGER_HAPPY"
 max-entity-stack: 100
 max-spawner-stack: 100
+natural-spawner-remover:
+  enable: true
+  worlds:
+    - world

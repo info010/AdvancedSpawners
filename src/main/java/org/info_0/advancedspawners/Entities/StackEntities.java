@@ -27,10 +27,10 @@ public class StackEntities implements Listener{
 
     @EventHandler
     public void spawnSpawnerEntity(SpawnerSpawnEvent event){
-        if(DataUtil.hasSpawnerData(event.getSpawner().getBlock())) return;
+        if(!DataUtil.hasSpawnerData(event.getSpawner()) || event.getSpawner() == null) return;
         CreatureSpawner spawner = event.getSpawner();
         Collection<Entity> entities = spawner.getWorld().getNearbyEntities(spawner.getLocation(),16,16,16);
-        int level = DataUtil.getSpawnerLevel(event.getSpawner().getBlock());
+        int level = DataUtil.getSpawnerLevel(event.getSpawner());
         for(Entity entity : entities){
             if(!DataUtil.hasEntityData(entity)) continue;
             if(!entity.getType().equals(spawner.getSpawnedType())) continue;
@@ -68,7 +68,7 @@ public class StackEntities implements Listener{
     }
 
     private void updateSpawnerEntity(Entity entity,int stack){
-        String name = String.format(entityName,stack,entity.getType().name());
+        String name = String.format(entityName,entity.getType().name(),stack);
         entity.setCustomName(ChatColor.GREEN + name);
         if(stack > maxStack)
             DataUtil.setEntityStack(entity, maxStack);

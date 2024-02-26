@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,7 +35,7 @@ public class NaturalSpawnerRemover implements Listener {
         BlockState[] blockStates = event.getChunk().getTileEntities();
         for(BlockState blockState : blockStates){
             if(blockState.getBlock().getType().equals(Material.SPAWNER)) continue;
-            if(DataUtil.hasSpawnerData(blockState.getBlock())) continue;
+            if(DataUtil.hasSpawnerData((CreatureSpawner) blockState)) continue;
             blockState.getBlock().setType(Material.AIR);
             Location location = blockState.getLocation();
             String loc = String.format("[%s, %s, %s, %s]",location.getWorld().getName(),location.getX(),location.getY(),location.getZ());

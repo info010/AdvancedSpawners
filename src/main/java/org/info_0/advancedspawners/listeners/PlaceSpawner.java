@@ -1,5 +1,6 @@
 package org.info_0.advancedspawners.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -40,9 +41,9 @@ public class PlaceSpawner implements Listener {
         CreatureSpawner creatureSpawner = (CreatureSpawner) spawner.getState();
         EntityType entityType = EntityType.valueOf(spawnerItem.getItemMeta().getPersistentDataContainer()
                 .get(new NamespacedKey(AdvancedSpawners.getInstance(),"SPAWNER_ENTITY_TYPE"),PersistentDataType.STRING));
-        DataUtil.createSpawnerData(spawner, entityType, spawnerLevel);
         creatureSpawner.setSpawnedType(entityType);
         creatureSpawner.update();
+        DataUtil.createSpawnerData(creatureSpawner, spawnerLevel, null);
         LevelHolograms.createSpawnerName(spawner,spawnerLevel);
         event.getPlayer().sendMessage(String.format("%d Spawner başarıyla yerleştirildi.",spawnerLevel));
     }

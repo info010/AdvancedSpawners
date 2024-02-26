@@ -16,6 +16,9 @@ import org.info_0.advancedspawners.features.LevelHolograms;
 import org.info_0.advancedspawners.utils.DataType;
 import org.info_0.advancedspawners.utils.DataUtil;
 
+import javax.xml.crypto.Data;
+import java.util.UUID;
+
 import static org.info_0.advancedspawners.items.PoenaSagaSpawner.peonasagaSpawner;
 
 
@@ -31,12 +34,13 @@ public class BreakSpawner implements Listener {
 
     @EventHandler
     public void breakSpawner(BlockBreakEvent event){
-        if(!DataUtil.hasSpawnerData(event.getBlock()) || !event.getBlock().getType().equals(Material.SPAWNER)) return;
-        Block spawner = event.getBlock();
-        int level = DataUtil.getSpawnerLevel(spawner);
+        if(!(event.getBlock().getState() instanceof CreatureSpawner)) return;
+        CreatureSpawner creatureSpawner = (CreatureSpawner) event.getBlock().getState();
+        if(!DataUtil.hasSpawnerData(creatureSpawner)) return;
+        int level = DataUtil.getSpawnerLevel(creatureSpawner);
         Player player = event.getPlayer();
         if(AdvancedSpawners.townyApi()){
-            if(!Towny.hasDestroyPermission(spawner,event.getPlayer())){
+            if(!Towny.hasDestroyPermission(creatureSpawner.getBlock(),event.getPlayer())){
                 event.getPlayer().sendMessage("Bu arazide bu işlemi yapamazsınız.");
                 event.setCancelled(true);
                 return;
@@ -46,7 +50,6 @@ public class BreakSpawner implements Listener {
             event.getPlayer().sendMessage("Bu arazide bu işlemi yapamazsınız.");
             return;
         }
-        CreatureSpawner creatureSpawner = (CreatureSpawner) spawner.getState();
         if((event.getPlayer().getInventory().getItemInMainHand().getType().isAir()
                 || !event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.DIAMOND_PICKAXE)
                 || !event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.NETHERITE_PICKAXE)
@@ -56,9 +59,9 @@ public class BreakSpawner implements Listener {
                 || !event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.WOODEN_PICKAXE))
                 && !event.getPlayer().getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.SILK_TOUCH))
         {
-            DataUtil.setSpawnerLevel(spawner, level-1);
-            LevelHolograms.updateLevelName(spawner, DataUtil.getSpawnerLevel(spawner));
-            creatureSpawner.update();
+            UUID uuid = DataUtil.getSpawnerUUID(creatureSpawner);
+            DataUtil.createSpawnerData(creatureSpawner,level-1,uuid);
+            LevelHolograms.updateLevelName(creatureSpawner.getBlock(), DataUtil.getSpawnerLevel(creatureSpawner));
             if(level-1 >= 1){
                 event.setCancelled(true);
             }
@@ -70,13 +73,14 @@ public class BreakSpawner implements Listener {
             }
             if(player.isSneaking()) {
                 player.getInventory().addItem(peonasagaSpawner(creatureSpawner.getSpawnedType(),level));
-                LevelHolograms.delSpawnerName(spawner);
+                LevelHolograms.delSpawnerName(creatureSpawner.getBlock());
             }
             else {
                 player.getInventory().addItem(peonasagaSpawner(creatureSpawner.getSpawnedType(),1));
-                DataUtil.setSpawnerLevel(spawner, level-1);
-                LevelHolograms.updateLevelName(spawner, DataUtil.getSpawnerLevel(spawner));
-                creatureSpawner.update();
+
+                UUID uuid = DataUtil.getSpawnerUUID(creatureSpawner);
+                DataUtil.createSpawnerData(creatureSpawner, level-1, uuid);
+                LevelHolograms.updateLevelName(creatureSpawner.getBlock(), DataUtil.getSpawnerLevel(creatureSpawner));
                 if(level-1 >= 1){
                     event.setCancelled(true);
                 }

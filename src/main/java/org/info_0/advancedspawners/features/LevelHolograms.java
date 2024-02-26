@@ -1,5 +1,6 @@
 package org.info_0.advancedspawners.features;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
@@ -11,6 +12,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.info_0.advancedspawners.AdvancedSpawners;
 import org.info_0.advancedspawners.utils.DataUtil;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,9 +36,10 @@ public class LevelHolograms {
     }
 
     public static void createSpawnerName(Block block, int level){
-        ArmorStand spawnerNameHologram = (ArmorStand) block.getWorld().spawnEntity(block.getLocation().add(0.5,0,0.5), EntityType.ARMOR_STAND);
-        DataUtil.setHologramID(spawnerNameHologram, DataUtil.getSpawnerUUID(block));
+        Entity entity = block.getWorld().spawnEntity(block.getLocation().add(0.5,0,0.5), EntityType.ARMOR_STAND);
+        ArmorStand spawnerNameHologram = (ArmorStand) entity;
         CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
+        DataUtil.setHologramID(entity, DataUtil.getSpawnerUUID(creatureSpawner));
         spawnerNameHologram.setCollidable(false);
         spawnerNameHologram.setVisible(false);
         spawnerNameHologram.setBasePlate(false);
@@ -48,13 +51,13 @@ public class LevelHolograms {
 
     public static void delSpawnerName(Block block){
         ArrayList<Entity> entities = (ArrayList<Entity>) block.getWorld().getNearbyEntities(block.getLocation(),1,1,1);
-        UUID spawnerID = DataUtil.getSpawnerUUID(block);
+        CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
+        UUID spawnerID = DataUtil.getSpawnerUUID(creatureSpawner);
         for(Entity entity: entities){
             if(!(entity instanceof ArmorStand)) continue;
-            ArmorStand stand = (ArmorStand) entity;
-            UUID id = DataUtil.getHologramID(stand);
+            UUID id = DataUtil.getHologramID(entity);
             if (id == null || !id.equals(spawnerID)) continue;
-            stand.remove();
+            entity.remove();
             break;
         }
     }
